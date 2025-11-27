@@ -16,31 +16,40 @@ function App() {
     setTheme(prevTheme => prevTheme === 'light' ? 'dark' : 'light');
   };
 
-  // Text-based slides for the carousel
+  // Text-based slides for the carousel (ensure consistent structure for each slide)
   const slides = [
     {
       subtitle: 'Featured Collection',
       title: 'Modern Essentials for Everyday Productivity',
-      description: 'Streamlined tools designed with precision. Explore laptops, headsets, and accessories that elevate your daily workflow.',
+      description:
+        'Streamlined tools designed with precision. Explore laptops, headsets, and accessories that elevate your daily workflow.',
       ctaLabel: 'Shop Essentials',
-      ctaHref: '#essentials'
+      ctaHref: '#essentials',
     },
     {
       subtitle: 'Work Anywhere',
       title: 'Lightweight. Powerful. Truly Portable.',
-      description: 'From coffee shop sprints to cross-country trips—performance that follows you. Discover our ultraportable lineup.',
+      description:
+        'From coffee shop sprints to cross-country trips—performance that follows you. Discover our ultraportable lineup.',
       ctaLabel: 'View Ultraportables',
-      ctaHref: '#ultraportables'
+      ctaHref: '#ultraportables',
     },
     {
       subtitle: 'Creator’s Corner',
       title: 'Cameras & Audio for High-Fidelity Content',
-      description: 'Capture detail and deliver immersive sound. Gear made for storytellers, streamers, and creators.',
+      description:
+        'Capture detail and deliver immersive sound. Gear made for storytellers, streamers, and creators.',
       ctaLabel: 'Browse Creator Gear',
-      ctaHref: '#creator'
+      ctaHref: '#creator',
     },
-    // Simple string slide is also supported
-    'Exclusive offers this week: member pricing and fast shipping on select items.'
+    {
+      subtitle: 'Member Exclusives',
+      title: 'Limited-Time Offers With Fast, Free Shipping',
+      description:
+        'Unlock member pricing on top categories this week only. Combine speedy delivery with unbeatable value on select items.',
+      ctaLabel: 'See Offers',
+      ctaHref: '#offers',
+    },
   ];
 
   return (
