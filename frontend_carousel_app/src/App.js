@@ -16,23 +16,28 @@ function App() {
     setTheme(prevTheme => prevTheme === 'light' ? 'dark' : 'light');
   };
 
-  // Sample images (external placeholders)
+  // Product-focused images (phone, laptop, headphones, smartwatch, camera)
+  // Using Unsplash CDN with parameters for consistent sizing/perf.
   const images = [
     {
-      src: 'https://images.unsplash.com/photo-1512496015851-a90fb38ba796?q=80&w=1600&auto=format&fit=crop',
-      alt: 'Elegant wristwatch on a stand'
-    },
-    {
-      src: 'https://images.unsplash.com/photo-1516728778615-2d590ea1856f?q=80&w=1600&auto=format&fit=crop',
-      alt: 'Modern headphones on a table'
-    },
-    {
-      src: 'https://images.unsplash.com/photo-1549298916-b41d501d3772?q=80&w=1600&auto=format&fit=crop',
-      alt: 'Minimalist sneaker product shot'
+      src: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?q=80&w=1600&auto=format&fit=crop',
+      alt: 'Modern smartphone angled on a dark background'
     },
     {
       src: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?q=80&w=1600&auto=format&fit=crop',
-      alt: 'Stylish camera on desk'
+      alt: 'Professional DSLR camera on a desk'
+    },
+    {
+      src: 'https://images.unsplash.com/photo-1517331156700-3c241d2b4d83?q=80&w=1600&auto=format&fit=crop',
+      alt: 'Sleek laptop open on a workspace'
+    },
+    {
+      src: 'https://images.unsplash.com/photo-1518443744133-6d5b0b2c9140?q=80&w=1600&auto=format&fit=crop',
+      alt: 'Over-ear wireless headphones in close-up'
+    },
+    {
+      src: 'https://images.unsplash.com/photo-1516574187841-cb9cc2ca948b?q=80&w=1600&auto=format&fit=crop',
+      alt: 'Smartwatch with health metrics on screen'
     }
   ];
 
