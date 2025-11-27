@@ -30,12 +30,10 @@
   position: relative;
   transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
 
-  /* Prevent any overflow and create a centered canvas */
   overflow: hidden;
   display: grid;
   place-items: center;
 
-  /* Cap overall card height for small viewports - tightened further */
   max-height: var(--op-card-max-height, min(680px, 60vh));
 }
 
@@ -52,23 +50,16 @@
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.35), var(--op-shadow);
 }
 
-/* Viewport that controls the slide area.
-   Use aspect-ratio as a default, but also cap by viewport height so images never overflow. */
+/* Viewport controls the slide area: suitable for content panels (not images) */
 .op-carousel-viewport {
   position: relative;
   z-index: 1;
   width: 100%;
   max-width: var(--op-max-width, min(100%, 1200px));
-  /* Provide a safe aspect ratio while allowing height to be capped */
   aspect-ratio: 16 / 9;
-
-  /* Height constraint: choose the smaller between a pixel cap and a viewport cap - tightened */
   max-height: var(--op-viewport-max-height, min(640px, 55vh));
-
-  /* Create a centered box so images are always centered even when letterboxed */
   display: grid;
   place-items: center;
-
   overflow: hidden;
   background: transparent;
 }
@@ -91,37 +82,82 @@
   box-sizing: border-box;
 }
 
-/* Image containment rules */
-.op-carousel-image {
-  /* Let image scale responsively */
-  width: 100%;
-  height: auto;
-  max-width: 100%;
-  /* Inherit max height from the viewport/container to avoid overflow */
-  max-height: 100%;
-  /* Ensure it never spills out due to rounding */
-  overflow: hidden;
+/* Text slide panel (replaces image rules) */
+.op-slide-panel {
+  width: min(90%, 880px);
+  margin: 0 auto;
+  padding: clamp(16px, 3vw, 28px);
+  border-radius: 14px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.85), rgba(255,255,255,0.65));
+  color: var(--op-text);
+  box-shadow: 0 6px 22px rgba(17,24,39,0.10);
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(37, 99, 235, 0.10);
+}
 
-  object-fit: contain;
-  object-position: center;
+[data-theme="dark"] .op-slide-panel {
+  background: linear-gradient(180deg, rgba(17,24,39,0.75), rgba(17,24,39,0.55));
+  border-color: rgba(96, 165, 250, 0.18);
+  box-shadow: 0 8px 28px rgba(0,0,0,0.45);
+}
 
-  border-radius: 12px;
-  user-select: none;
-  -webkit-user-drag: none;
+/* Typography */
+.op-slide-subtitle {
+  margin: 0 0 6px 0;
+  font-size: clamp(12px, 1.6vw, 14px);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--op-primary);
+  font-weight: 700;
+}
 
-  /* Subtle inner shadow and prevent background color flashes */
-  box-shadow: 0 1px 0 rgba(17,24,39,0.02) inset;
-  background: transparent;
+.op-slide-title {
+  margin: 4px 0 10px 0;
+  font-size: clamp(22px, 3vw, 32px);
+  line-height: 1.25;
+  font-weight: 800;
+  color: var(--op-text);
+}
 
-  /* Smooth resizing on environment changes */
-  transition: transform 0.2s ease;
+.op-slide-description {
+  margin: 0 0 16px 0;
+  font-size: clamp(14px, 2vw, 16px);
+  line-height: 1.6;
+  color: rgba(17, 24, 39, 0.85);
+}
+
+[data-theme="dark"] .op-slide-description {
+  color: rgba(243, 244, 246, 0.9);
+}
+
+/* CTA button */
+.op-slide-cta {
+  display: inline-block;
+  background: var(--op-primary);
+  color: white;
+  padding: 10px 16px;
+  border-radius: 10px;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 14px;
+  box-shadow: 0 6px 18px rgba(37, 99, 235, 0.25);
+  transition: transform 0.18s ease, box-shadow 0.18s ease, opacity 0.18s ease;
+}
+
+.op-slide-cta:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 24px rgba(37, 99, 235, 0.35);
+  opacity: 0.95;
+}
+
+.op-slide-cta:active {
+  transform: translateY(0);
 }
 
 /* Dots */
 .op-carousel-dots {
   position: absolute;
   z-index: 2;
-  /* Respect safe-area on mobile devices */
   bottom: calc(10px + var(--op-safe-bottom, 0px));
   left: 50%;
   transform: translateX(-50%);
@@ -186,16 +222,23 @@
   box-shadow: var(--op-shadow);
 }
 
-/* Responsiveness: reduce height cap on very narrow screens */
+/* Responsiveness */
 @media (max-width: 480px) {
   .op-carousel {
     max-height: var(--op-card-max-height, min(520px, 58vh));
   }
   .op-carousel-viewport {
     max-height: var(--op-viewport-max-height, min(480px, 50vh));
-    aspect-ratio: 4 / 3; /* Slightly taller for mobile to utilize space better */
-    /* Ensure dots area has space */
+    aspect-ratio: 4 / 3;
     padding-bottom: calc(8px + var(--op-safe-bottom, 0px));
     box-sizing: border-box;
+  }
+  .op-slide-panel {
+    width: min(94%, 720px);
+    padding: 14px;
+  }
+  .op-slide-cta {
+    font-size: 13px;
+    padding: 9px 14px;
   }
 }

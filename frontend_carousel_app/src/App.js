@@ -16,40 +16,31 @@ function App() {
     setTheme(prevTheme => prevTheme === 'light' ? 'dark' : 'light');
   };
 
-  // Product-focused images with reliable primary URLs and local public fallbacks.
-  // Note: In CRA, public assets must be referenced with absolute paths like "/images/asset.jpg".
-  // We keep alt text present so it renders while the images load.
-  const images = [
+  // Text-based slides for the carousel
+  const slides = [
     {
-      // Smartphone
-      src: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=1600&q=80',
-      fallback: '/images/phone.jpg',
-      alt: 'Modern smartphone angled on a dark background'
+      subtitle: 'Featured Collection',
+      title: 'Modern Essentials for Everyday Productivity',
+      description: 'Streamlined tools designed with precision. Explore laptops, headsets, and accessories that elevate your daily workflow.',
+      ctaLabel: 'Shop Essentials',
+      ctaHref: '#essentials'
     },
     {
-      // Camera
-      src: 'https://images.unsplash.com/photo-1519183071298-a2962be96f83?auto=format&fit=crop&w=1600&q=80',
-      fallback: '/images/camera.jpg',
-      alt: 'Professional DSLR camera on a desk'
+      subtitle: 'Work Anywhere',
+      title: 'Lightweight. Powerful. Truly Portable.',
+      description: 'From coffee shop sprints to cross-country trips—performance that follows you. Discover our ultraportable lineup.',
+      ctaLabel: 'View Ultraportables',
+      ctaHref: '#ultraportables'
     },
     {
-      // Laptop
-      src: 'https://images.unsplash.com/photo-1518779578993-ec3579fee39f?auto=format&fit=crop&w=1600&q=80',
-      fallback: '/images/laptop.jpg',
-      alt: 'Sleek laptop open on a workspace'
+      subtitle: 'Creator’s Corner',
+      title: 'Cameras & Audio for High-Fidelity Content',
+      description: 'Capture detail and deliver immersive sound. Gear made for storytellers, streamers, and creators.',
+      ctaLabel: 'Browse Creator Gear',
+      ctaHref: '#creator'
     },
-    {
-      // Headphones
-      src: 'https://images.unsplash.com/photo-1518443078884-bc1df95c9fe6?auto=format&fit=crop&w=1600&q=80',
-      fallback: '/images/headphones.jpg',
-      alt: 'Over-ear wireless headphones in close-up'
-    },
-    {
-      // Smartwatch
-      src: 'https://images.unsplash.com/photo-1517433670267-08bbd4be890f?auto=format&fit=crop&w=1600&q=80',
-      fallback: '/images/smartwatch.jpg',
-      alt: 'Smartwatch with health metrics on screen'
-    }
+    // Simple string slide is also supported
+    'Exclusive offers this week: member pricing and fast shipping on select items.'
   ];
 
   return (
@@ -72,12 +63,12 @@ function App() {
           </p>
           <div style={{ width: 'min(100%, 1200px)' }}>
             <Carousel
-              images={images}
+              slides={slides}
               autoPlay={true}
-              interval={4500}
+              interval={5500}
               showDots={true}
               initialIndex={0}
-              ariaLabel="Product image carousel"
+              ariaLabel="Promotional content carousel"
               loop={true}
               /* Example: override maximum height if needed
                  maxHeightVh={58} */

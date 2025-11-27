@@ -3,31 +3,51 @@ import "./Carousel.css";
 
 /**
  * PUBLIC_INTERFACE
- * Carousel component to display a set of product images with autoplay, navigation dots, and accessibility support.
+ * Carousel component to display a set of text slides with autoplay, navigation dots, and accessibility support.
  *
  * Props:
- * - images: Array<{ src: string, alt?: string, fallback?: string }>
+ * - slides: Array<string | { title?: string, subtitle?: string, description?: string, ctaLabel?: string, ctaHref?: string }>
+ *           Backward compatible: if `images` is provided, it will be treated as slides.
  * - autoPlay?: boolean (default: true)
- * - interval?: number in ms (default: 4500)
+ * - interval?: number in ms (default: 5500)
  * - showDots?: boolean (default: true)
  * - initialIndex?: number (default: 0)
- * - ariaLabel?: string (default: "Product image carousel")
+ * - ariaLabel?: string (default: "Content carousel")
  * - loop?: boolean (default: true)
  * - maxHeightVh?: number (default: 60) - maximum height of the carousel viewport as a percentage of the viewport height
  */
 function Carousel({
-  images,
+  slides,
+  images, // backward compatibility
   autoPlay = true,
-  interval = 4500,
+  interval = 5500,
   showDots = true,
   initialIndex = 0,
-  ariaLabel = "Product image carousel",
+  ariaLabel = "Content carousel",
   loop = true,
   maxHeightVh = 60,
 }) {
-  const safeImages = Array.isArray(images) ? images : [];
+  // Normalize input: support `slides` (preferred) or `images` (legacy) by converting to text slides
+  const input = Array.isArray(slides) ? slides : Array.isArray(images) ? images : [];
+  const safeSlides = input.map((s, idx) => {
+    if (typeof s === "string") {
+      return { description: s };
+    }
+    // If legacy image objects are passed, convert to description using alt/src
+    if (s && typeof s === "object" && ("src" in s || "alt" in s)) {
+      return {
+        title: s.alt ? `Slide ${idx + 1}` : undefined,
+        description: s.alt || `Image slide ${idx + 1}`,
+        ctaLabel: undefined,
+        ctaHref: undefined,
+      };
+    }
+    // Already an object with text fields
+    return s || { description: `Slide ${idx + 1}` };
+  });
+
   const [current, setCurrent] = useState(
-    Math.min(Math.max(initialIndex || 0, 0), Math.max(safeImages.length - 1, 0))
+    Math.min(Math.max(initialIndex || 0, 0), Math.max(safeSlides.length - 1, 0))
   );
   const [isPaused, setIsPaused] = useState(false);
   const containerRef = useRef(null);
@@ -35,16 +55,12 @@ function Carousel({
   const focusInsideRef = useRef(false);
   const lastClickTimeRef = useRef(0);
 
-  // Track which images have errored to swap their source to fallback URLs
-  const [errorMap, setErrorMap] = useState({}); // { [index: number]: true }
-
-  const count = safeImages.length;
+  const count = safeSlides.length;
 
   const goTo = useCallback(
     (index) => {
       if (!count) return;
       if (index === current) return;
-      // Clamp or loop based on prop
       if (loop) {
         const next = (index + count) % count;
         setCurrent(next);
@@ -86,26 +102,20 @@ function Carousel({
     if (!autoPlay || isPaused || count <= 1) return;
     clearTimer();
     autoplayRef.current = window.setInterval(() => {
-      // Only advance if not paused and not focused
       if (!isPaused && !focusInsideRef.current) {
         goNext();
       }
-    }, Math.max(1500, interval)); // guard against too-fast interval
+    }, Math.max(2000, interval)); // guard against too-fast interval
   }, [autoPlay, clearTimer, goNext, interval, isPaused, count]);
 
-  // Restart timer whenever dependencies change
   useEffect(() => {
     startTimer();
     return () => clearTimer();
   }, [startTimer, clearTimer, current]);
 
   // Pause/resume on hover
-  const onMouseEnter = () => {
-    setIsPaused(true);
-  };
-  const onMouseLeave = () => {
-    setIsPaused(false);
-  };
+  const onMouseEnter = () => setIsPaused(true);
+  const onMouseLeave = () => setIsPaused(false);
 
   // Focus/blur management to pause when focused inside
   useEffect(() => {
@@ -117,7 +127,6 @@ function Carousel({
       setIsPaused(true);
     };
     const handleFocusOut = (e) => {
-      // If focus left the container completely
       if (el && !el.contains(e.relatedTarget)) {
         focusInsideRef.current = false;
         setIsPaused(false);
@@ -164,7 +173,7 @@ function Carousel({
   if (!count) {
     return (
       <div className="op-carousel-empty" role="status" aria-live="polite">
-        No images to display
+        No slides to display
       </div>
     );
   }
@@ -180,24 +189,21 @@ function Carousel({
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
       style={{
-        // Expose tunable sizing via CSS variables
-        // Cap width and provide dynamic height caps that downstream CSS consumes
-        // Use min() to ensure it never exceeds viewport and a sensible pixel max
         ["--op-max-width"]: "min(100%, 1200px)",
         ["--op-card-max-height"]: `min(720px, ${Math.max(40, Math.min(100, maxHeightVh))}vh)`,
-        ["--op-viewport-max-height"]:`min(680px, ${Math.max(35, Math.min(100, maxHeightVh - 5))}vh)`,
-        // Account for safe areas on mobile so dots remain visible
+        ["--op-viewport-max-height"]: `min(680px, ${Math.max(35, Math.min(100, maxHeightVh - 5))}vh)`,
         ["--op-safe-bottom"]: "max(env(safe-area-inset-bottom, 0px), 0px)",
       }}
     >
       <div className="op-carousel-viewport">
         <div className="op-carousel-track" style={slidesStyle}>
-          {safeImages.map((img, idx) => {
+          {safeSlides.map((slide, idx) => {
             const isActive = idx === current;
-
-            // Determine the effective source: use fallback if the image previously errored
-            const effectiveSrc =
-              errorMap[idx] && img.fallback ? img.fallback : img.src;
+            const hasCTA = slide && slide.ctaLabel && slide.ctaHref;
+            const title = slide?.title;
+            const subtitle = slide?.subtitle;
+            const description =
+              slide?.description ?? (typeof slide === "string" ? slide : "");
 
             return (
               <div
@@ -208,21 +214,20 @@ function Carousel({
                 aria-label={`${idx + 1} of ${count}`}
                 aria-hidden={!isActive}
               >
-                {/* Alt text remains available to screen readers and visible if image is loading */}
-                <img
-                  className="op-carousel-image"
-                  src={effectiveSrc}
-                  alt={img.alt || `Product image ${idx + 1}`}
-                  loading="lazy"
-                  sizes="100vw"
-                  draggable="false"
-                  onError={() => {
-                    // When an image fails, set its error flag so we swap to fallback on next render.
-                    if (!errorMap[idx] && img.fallback) {
-                      setErrorMap((prev) => ({ ...prev, [idx]: true }));
-                    }
-                  }}
-                />
+                <div className="op-slide-panel" role="region" aria-label={title || `Slide ${idx + 1}`}>
+                  {subtitle && <p className="op-slide-subtitle">{subtitle}</p>}
+                  {title && <h3 className="op-slide-title">{title}</h3>}
+                  {description && <p className="op-slide-description">{description}</p>}
+                  {hasCTA && (
+                    <a
+                      className="op-slide-cta"
+                      href={slide.ctaHref}
+                      aria-label={slide.ctaLabel}
+                    >
+                      {slide.ctaLabel}
+                    </a>
+                  )}
+                </div>
               </div>
             );
           })}
@@ -231,7 +236,7 @@ function Carousel({
 
       {showDots && (
         <div className="op-carousel-dots" role="tablist" aria-label="Choose slide">
-          {safeImages.map((_, idx) => {
+          {safeSlides.map((_, idx) => {
             const active = idx === current;
             return (
               <button
@@ -245,7 +250,6 @@ function Carousel({
                 onClick={() => {
                   if (!canClick()) return;
                   goTo(idx);
-                  // reset autoplay timer
                   clearTimer();
                   startTimer();
                 }}
