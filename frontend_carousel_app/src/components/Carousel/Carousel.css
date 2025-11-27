@@ -21,7 +21,7 @@
 /* Root carousel card */
 .op-carousel {
   outline: none;
-  width: min(100%, 1100px);
+  width: var(--op-max-width, min(100%, 1100px));
   margin: 0 auto;
   background: var(--op-surface);
   color: var(--op-text);
@@ -35,8 +35,8 @@
   display: grid;
   place-items: center;
 
-  /* Cap overall card height for small viewports */
-  max-height: min(720px, 70vh);
+  /* Cap overall card height for small viewports - tightened further */
+  max-height: var(--op-card-max-height, min(680px, 60vh));
 }
 
 .op-carousel::before {
@@ -58,11 +58,12 @@
   position: relative;
   z-index: 1;
   width: 100%;
+  max-width: var(--op-max-width, min(100%, 1200px));
   /* Provide a safe aspect ratio while allowing height to be capped */
   aspect-ratio: 16 / 9;
 
-  /* Height constraint: choose the smaller between a pixel cap and a viewport cap */
-  max-height: min(680px, 65vh);
+  /* Height constraint: choose the smaller between a pixel cap and a viewport cap - tightened */
+  max-height: var(--op-viewport-max-height, min(640px, 55vh));
 
   /* Create a centered box so images are always centered even when letterboxed */
   display: grid;
@@ -92,11 +93,14 @@
 
 /* Image containment rules */
 .op-carousel-image {
-  /* Let image scale down to fit both width and height of the viewport */
-  max-width: 100%;
-  max-height: 100%;
-  width: auto;
+  /* Let image scale responsively */
+  width: 100%;
   height: auto;
+  max-width: 100%;
+  /* Inherit max height from the viewport/container to avoid overflow */
+  max-height: 100%;
+  /* Ensure it never spills out due to rounding */
+  overflow: hidden;
 
   object-fit: contain;
   object-position: center;
@@ -117,7 +121,8 @@
 .op-carousel-dots {
   position: absolute;
   z-index: 2;
-  bottom: 10px;
+  /* Respect safe-area on mobile devices */
+  bottom: calc(10px + var(--op-safe-bottom, 0px));
   left: 50%;
   transform: translateX(-50%);
   display: flex;
@@ -127,6 +132,7 @@
   border-radius: 999px;
   backdrop-filter: blur(6px);
   box-shadow: 0 4px 16px rgba(17,24,39,0.12);
+  pointer-events: auto;
 }
 
 [data-theme="dark"] .op-carousel-dots {
@@ -170,7 +176,7 @@
 
 /* Empty state */
 .op-carousel-empty {
-  width: min(100%, 1100px);
+  width: var(--op-max-width, min(100%, 1200px));
   margin: 0 auto;
   padding: 24px;
   border-radius: 12px;
@@ -183,10 +189,13 @@
 /* Responsiveness: reduce height cap on very narrow screens */
 @media (max-width: 480px) {
   .op-carousel {
-    max-height: min(560px, 60vh);
+    max-height: var(--op-card-max-height, min(520px, 58vh));
   }
   .op-carousel-viewport {
-    max-height: min(520px, 50vh);
+    max-height: var(--op-viewport-max-height, min(480px, 50vh));
     aspect-ratio: 4 / 3; /* Slightly taller for mobile to utilize space better */
+    /* Ensure dots area has space */
+    padding-bottom: calc(8px + var(--op-safe-bottom, 0px));
+    box-sizing: border-box;
   }
 }

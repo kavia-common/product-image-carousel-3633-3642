@@ -13,6 +13,7 @@ import "./Carousel.css";
  * - initialIndex?: number (default: 0)
  * - ariaLabel?: string (default: "Product image carousel")
  * - loop?: boolean (default: true)
+ * - maxHeightVh?: number (default: 60) - maximum height of the carousel viewport as a percentage of the viewport height
  */
 function Carousel({
   images,
@@ -22,6 +23,7 @@ function Carousel({
   initialIndex = 0,
   ariaLabel = "Product image carousel",
   loop = true,
+  maxHeightVh = 60,
 }) {
   const safeImages = Array.isArray(images) ? images : [];
   const [current, setCurrent] = useState(
@@ -174,6 +176,16 @@ function Carousel({
       onKeyDown={onKeyDown}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
+      style={{
+        // Expose tunable sizing via CSS variables
+        // Cap width and provide dynamic height caps that downstream CSS consumes
+        // Use min() to ensure it never exceeds viewport and a sensible pixel max
+        ["--op-max-width"]: "min(100%, 1200px)",
+        ["--op-card-max-height"]: `min(720px, ${Math.max(40, Math.min(100, maxHeightVh))}vh)`,
+        ["--op-viewport-max-height"]:`min(680px, ${Math.max(35, Math.min(100, maxHeightVh - 5))}vh)`,
+        // Account for safe areas on mobile so dots remain visible
+        ["--op-safe-bottom"]: "max(env(safe-area-inset-bottom, 0px), 0px)",
+      }}
     >
       <div className="op-carousel-viewport">
         <div className="op-carousel-track" style={slidesStyle}>

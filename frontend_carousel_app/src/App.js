@@ -54,7 +54,7 @@ function App() {
           <p style={{ margin: 0, opacity: 0.85, fontSize: 'clamp(14px, 2vw, 16px)' }}>
             Centered carousel covering the top portion of the product page with navigation dots at the bottom.
           </p>
-          <div style={{ width: 'min(100%, 1150px)' }}>
+          <div style={{ width: 'min(100%, 1200px)' }}>
             <Carousel
               images={images}
               autoPlay={true}
@@ -63,6 +63,8 @@ function App() {
               initialIndex={0}
               ariaLabel="Product image carousel"
               loop={true}
+              /* Example: override maximum height if needed
+                 maxHeightVh={58} */
             />
           </div>
         </div>
