@@ -62,6 +62,7 @@
   place-items: center;
   overflow: hidden;
   background: transparent;
+  box-sizing: border-box;
 }
 
 /* Slides track fills the viewport box */
@@ -87,6 +88,7 @@
   width: min(90%, 880px);
   margin: 0 auto;
   padding: clamp(16px, 3vw, 28px);
+  padding-bottom: clamp(20px, 3.5vw, 32px); /* extra bottom padding to avoid overlap with dots */
   border-radius: 14px;
   background: linear-gradient(180deg, rgba(255,255,255,0.85), rgba(255,255,255,0.65));
   color: var(--op-text);
@@ -154,14 +156,24 @@
   transform: translateY(0);
 }
 
+/* Footer area to reserve space for dots so they don't overlap content */
+.op-carousel-footer {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  display: grid;
+  place-items: center;
+  box-sizing: border-box;
+  padding-bottom: calc(8px + var(--op-safe-bottom, 0px));
+  padding-top: 6px;
+}
+
 /* Dots */
 .op-carousel-dots {
-  position: absolute;
-  z-index: 2;
-  bottom: calc(10px + var(--op-safe-bottom, 0px));
-  left: 50%;
-  transform: translateX(-50%);
+  position: relative;
   display: flex;
+  align-items: center;
+  justify-content: center;
   gap: 10px;
   padding: 8px 10px;
   background: rgba(255, 255, 255, 0.35);
@@ -230,12 +242,13 @@
   .op-carousel-viewport {
     max-height: var(--op-viewport-max-height, min(480px, 50vh));
     aspect-ratio: 4 / 3;
-    padding-bottom: calc(8px + var(--op-safe-bottom, 0px));
+    padding-bottom: 6px;
     box-sizing: border-box;
   }
   .op-slide-panel {
-    width: min(94%, 720px);
+    width: min(96%, 720px);
     padding: 14px;
+    padding-bottom: 18px;
   }
   .op-slide-cta {
     font-size: 13px;

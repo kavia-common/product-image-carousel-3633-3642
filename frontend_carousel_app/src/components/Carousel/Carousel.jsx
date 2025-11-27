@@ -101,11 +101,13 @@ function Carousel({
   const startTimer = useCallback(() => {
     if (!autoPlay || isPaused || count <= 1) return;
     clearTimer();
+    // Clamp to 5000-6000ms as required
+    const clampedInterval = Math.max(5000, Math.min(interval, 6000));
     autoplayRef.current = window.setInterval(() => {
       if (!isPaused && !focusInsideRef.current) {
         goNext();
       }
-    }, Math.max(2000, interval)); // guard against too-fast interval
+    }, clampedInterval);
   }, [autoPlay, clearTimer, goNext, interval, isPaused, count]);
 
   useEffect(() => {
@@ -163,10 +165,13 @@ function Carousel({
   };
 
   const slidesStyle = useMemo(
-    () => ({
-      width: `${count * 100}%`,
-      transform: `translateX(-${(100 / (count || 1)) * current}%)`,
-    }),
+    () => {
+      const total = Math.max(1, count);
+      return {
+        width: `${total * 100}%`,
+        transform: `translateX(-${(100 / total) * current}%)`,
+      };
+    },
     [count, current]
   );
 
@@ -184,6 +189,7 @@ function Carousel({
       className="op-carousel"
       aria-roledescription="carousel"
       aria-label={ariaLabel}
+      aria-live="polite"
       tabIndex={0}
       onKeyDown={onKeyDown}
       onMouseEnter={onMouseEnter}
@@ -213,6 +219,7 @@ function Carousel({
                 aria-roledescription="slide"
                 aria-label={`${idx + 1} of ${count}`}
                 aria-hidden={!isActive}
+                aria-current={isActive ? "true" : undefined}
               >
                 <div className="op-slide-panel" role="region" aria-label={title || `Slide ${idx + 1}`}>
                   {subtitle && <p className="op-slide-subtitle">{subtitle}</p>}
@@ -235,29 +242,36 @@ function Carousel({
       </div>
 
       {showDots && (
-        <div className="op-carousel-dots" role="tablist" aria-label="Choose slide">
-          {safeSlides.map((_, idx) => {
-            const active = idx === current;
-            return (
-              <button
-                key={`dot-${idx}`}
-                type="button"
-                role="tab"
-                aria-selected={active}
-                aria-current={active ? "true" : undefined}
-                aria-label={`Go to slide ${idx + 1}`}
-                className={`op-dot ${active ? "active" : ""}`}
-                onClick={() => {
-                  if (!canClick()) return;
-                  goTo(idx);
-                  clearTimer();
-                  startTimer();
-                }}
-                onFocus={() => setIsPaused(true)}
-                onBlur={() => setIsPaused(false)}
-              />
-            );
-          })}
+        <div className="op-carousel-footer" aria-hidden={false}>
+          <div
+            className="op-carousel-dots"
+            role="tablist"
+            aria-label="Choose slide"
+            style={{ ["--op-safe-bottom"]: "max(env(safe-area-inset-bottom, 0px), 0px)" }}
+          >
+            {safeSlides.map((_, idx) => {
+              const active = idx === current;
+              return (
+                <button
+                  key={`dot-${idx}`}
+                  type="button"
+                  role="tab"
+                  aria-selected={active}
+                  aria-current={active ? "true" : undefined}
+                  aria-label={`Go to slide ${idx + 1}`}
+                  className={`op-dot ${active ? "active" : ""}`}
+                  onClick={() => {
+                    if (!canClick()) return;
+                    goTo(idx);
+                    clearTimer();
+                    startTimer();
+                  }}
+                  onFocus={() => setIsPaused(true)}
+                  onBlur={() => setIsPaused(false)}
+                />
+              );
+            })}
+          </div>
         </div>
       )}
     </section>
