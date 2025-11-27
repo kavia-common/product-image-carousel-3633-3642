@@ -71,11 +71,14 @@
   height: 100%;
   transition: transform 500ms ease;
   will-change: transform;
+  /* Ensure track cannot shrink below its content width */
+  min-width: 100%;
 }
 
 /* Each slide centers its content */
 .op-carousel-slide {
   flex: 0 0 100%;
+  min-width: 100%;
   height: 100%;
   display: grid;
   place-items: center;
@@ -93,7 +96,8 @@
   padding: clamp(16px, 3vw, 28px);
   padding-bottom: clamp(20px, 3.5vw, 32px); /* extra bottom padding to avoid overlap with dots */
   border-radius: 14px;
-  background: linear-gradient(180deg, rgba(255,255,255,0.85), rgba(255,255,255,0.65));
+  /* Slightly stronger background for consistent contrast */
+  background: linear-gradient(180deg, rgba(255,255,255,0.92), rgba(255,255,255,0.72));
   color: var(--op-text);
   box-shadow: 0 6px 22px rgba(17,24,39,0.10);
   backdrop-filter: blur(4px);

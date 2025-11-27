@@ -232,6 +232,7 @@ function Carousel({
                   role="region"
                   aria-label={title || `Slide ${idx + 1}`}
                   data-testid={`op-slide-panel-${idx}`}
+                  data-debug-active={isActive ? "true" : "false"}
                 >
                   {subtitle && <p className="op-slide-subtitle">{subtitle}</p>}
                   {title && <h3 className="op-slide-title">{title}</h3>}
