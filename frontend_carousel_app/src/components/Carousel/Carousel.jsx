@@ -193,6 +193,7 @@ function Carousel({
                   src={img.src}
                   alt={img.alt || `Product image ${idx + 1}`}
                   loading="lazy"
+                  sizes="100vw"
                   draggable="false"
                 />
               </div>

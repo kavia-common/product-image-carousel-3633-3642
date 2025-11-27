@@ -18,6 +18,7 @@
   --op-surface-muted: linear-gradient(180deg, rgba(59,130,246,0.12), rgba(17,24,39,0.85));
 }
 
+/* Root carousel card */
 .op-carousel {
   outline: none;
   width: min(100%, 1100px);
@@ -28,8 +29,14 @@
   box-shadow: var(--op-shadow);
   position: relative;
   transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
-  /* Create an inner gradient background area behind images */
+
+  /* Prevent any overflow and create a centered canvas */
   overflow: hidden;
+  display: grid;
+  place-items: center;
+
+  /* Cap overall card height for small viewports */
+  max-height: min(720px, 70vh);
 }
 
 .op-carousel::before {
@@ -45,16 +52,27 @@
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.35), var(--op-shadow);
 }
 
-/* Aspect ratio wrapper using modern aspect-ratio */
+/* Viewport that controls the slide area.
+   Use aspect-ratio as a default, but also cap by viewport height so images never overflow. */
 .op-carousel-viewport {
   position: relative;
   z-index: 1;
   width: 100%;
-  aspect-ratio: 16/9;
+  /* Provide a safe aspect ratio while allowing height to be capped */
+  aspect-ratio: 16 / 9;
+
+  /* Height constraint: choose the smaller between a pixel cap and a viewport cap */
+  max-height: min(680px, 65vh);
+
+  /* Create a centered box so images are always centered even when letterboxed */
+  display: grid;
+  place-items: center;
+
   overflow: hidden;
   background: transparent;
 }
 
+/* Slides track fills the viewport box */
 .op-carousel-track {
   display: flex;
   height: 100%;
@@ -62,23 +80,37 @@
   will-change: transform;
 }
 
+/* Each slide centers its content */
 .op-carousel-slide {
   flex: 0 0 100%;
   height: 100%;
   display: grid;
   place-items: center;
   padding: 12px;
+  box-sizing: border-box;
 }
 
+/* Image containment rules */
 .op-carousel-image {
-  width: 100%;
-  height: 100%;
+  /* Let image scale down to fit both width and height of the viewport */
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+
   object-fit: contain;
+  object-position: center;
+
   border-radius: 12px;
   user-select: none;
   -webkit-user-drag: none;
+
+  /* Subtle inner shadow and prevent background color flashes */
   box-shadow: 0 1px 0 rgba(17,24,39,0.02) inset;
   background: transparent;
+
+  /* Smooth resizing on environment changes */
+  transition: transform 0.2s ease;
 }
 
 /* Dots */
@@ -146,4 +178,15 @@
   color: var(--op-text);
   text-align: center;
   box-shadow: var(--op-shadow);
+}
+
+/* Responsiveness: reduce height cap on very narrow screens */
+@media (max-width: 480px) {
+  .op-carousel {
+    max-height: min(560px, 60vh);
+  }
+  .op-carousel-viewport {
+    max-height: min(520px, 50vh);
+    aspect-ratio: 4 / 3; /* Slightly taller for mobile to utilize space better */
+  }
 }
