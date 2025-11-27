@@ -17,26 +17,27 @@ function App() {
   };
 
   // Product-focused images (phone, laptop, headphones, smartwatch, camera)
-  // Using Unsplash CDN with parameters for consistent sizing/perf.
+  // Switched to local assets under CRA public/images for stable offline-friendly delivery.
+  // In CRA, assets placed in public are available at "/images/..." at runtime.
   const images = [
     {
-      src: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?q=80&w=1600&auto=format&fit=crop',
+      src: '/images/phone.jpg',
       alt: 'Modern smartphone angled on a dark background'
     },
     {
-      src: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?q=80&w=1600&auto=format&fit=crop',
+      src: '/images/camera.jpg',
       alt: 'Professional DSLR camera on a desk'
     },
     {
-      src: 'https://images.unsplash.com/photo-1517331156700-3c241d2b4d83?q=80&w=1600&auto=format&fit=crop',
+      src: '/images/laptop.jpg',
       alt: 'Sleek laptop open on a workspace'
     },
     {
-      src: 'https://images.unsplash.com/photo-1518443744133-6d5b0b2c9140?q=80&w=1600&auto=format&fit=crop',
+      src: '/images/headphones.jpg',
       alt: 'Over-ear wireless headphones in close-up'
     },
     {
-      src: 'https://images.unsplash.com/photo-1516574187841-cb9cc2ca948b?q=80&w=1600&auto=format&fit=crop',
+      src: '/images/smartwatch.jpg',
       alt: 'Smartwatch with health metrics on screen'
     }
   ];
