@@ -58,7 +58,7 @@ function App() {
             <Carousel
               images={images}
               autoPlay={true}
-              interval={4000}
+              interval={4500}
               showDots={true}
               initialIndex={0}
               ariaLabel="Product image carousel"

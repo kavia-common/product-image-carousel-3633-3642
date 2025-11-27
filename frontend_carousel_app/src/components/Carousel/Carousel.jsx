@@ -8,7 +8,7 @@ import "./Carousel.css";
  * Props:
  * - images: Array<{ src: string, alt?: string }>
  * - autoPlay?: boolean (default: true)
- * - interval?: number in ms (default: 4000)
+ * - interval?: number in ms (default: 4500)
  * - showDots?: boolean (default: true)
  * - initialIndex?: number (default: 0)
  * - ariaLabel?: string (default: "Product image carousel")
@@ -17,7 +17,7 @@ import "./Carousel.css";
 function Carousel({
   images,
   autoPlay = true,
-  interval = 4000,
+  interval = 4500,
   showDots = true,
   initialIndex = 0,
   ariaLabel = "Product image carousel",
