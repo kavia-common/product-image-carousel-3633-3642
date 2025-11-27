@@ -6,7 +6,7 @@ import "./Carousel.css";
  * Carousel component to display a set of product images with autoplay, navigation dots, and accessibility support.
  *
  * Props:
- * - images: Array<{ src: string, alt?: string }>
+ * - images: Array<{ src: string, alt?: string, fallback?: string }>
  * - autoPlay?: boolean (default: true)
  * - interval?: number in ms (default: 4500)
  * - showDots?: boolean (default: true)
@@ -34,6 +34,9 @@ function Carousel({
   const autoplayRef = useRef(null);
   const focusInsideRef = useRef(false);
   const lastClickTimeRef = useRef(0);
+
+  // Track which images have errored to swap their source to fallback URLs
+  const [errorMap, setErrorMap] = useState({}); // { [index: number]: true }
 
   const count = safeImages.length;
 
@@ -191,6 +194,11 @@ function Carousel({
         <div className="op-carousel-track" style={slidesStyle}>
           {safeImages.map((img, idx) => {
             const isActive = idx === current;
+
+            // Determine the effective source: use fallback if the image previously errored
+            const effectiveSrc =
+              errorMap[idx] && img.fallback ? img.fallback : img.src;
+
             return (
               <div
                 key={idx}
@@ -200,13 +208,20 @@ function Carousel({
                 aria-label={`${idx + 1} of ${count}`}
                 aria-hidden={!isActive}
               >
+                {/* Alt text remains available to screen readers and visible if image is loading */}
                 <img
                   className="op-carousel-image"
-                  src={img.src}
+                  src={effectiveSrc}
                   alt={img.alt || `Product image ${idx + 1}`}
                   loading="lazy"
                   sizes="100vw"
                   draggable="false"
+                  onError={() => {
+                    // When an image fails, set its error flag so we swap to fallback on next render.
+                    if (!errorMap[idx] && img.fallback) {
+                      setErrorMap((prev) => ({ ...prev, [idx]: true }));
+                    }
+                  }}
                 />
               </div>
             );

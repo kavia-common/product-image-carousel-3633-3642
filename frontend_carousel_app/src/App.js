@@ -16,28 +16,38 @@ function App() {
     setTheme(prevTheme => prevTheme === 'light' ? 'dark' : 'light');
   };
 
-  // Product-focused images (phone, laptop, headphones, smartwatch, camera)
-  // Switched to local assets under CRA public/images for stable offline-friendly delivery.
-  // In CRA, assets placed in public are available at "/images/..." at runtime.
+  // Product-focused images with reliable primary URLs and local public fallbacks.
+  // Note: In CRA, public assets must be referenced with absolute paths like "/images/asset.jpg".
+  // We keep alt text present so it renders while the images load.
   const images = [
     {
-      src: '/images/phone.jpg',
+      // Smartphone
+      src: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=1600&q=80',
+      fallback: '/images/phone.jpg',
       alt: 'Modern smartphone angled on a dark background'
     },
     {
-      src: '/images/camera.jpg',
+      // Camera
+      src: 'https://images.unsplash.com/photo-1519183071298-a2962be96f83?auto=format&fit=crop&w=1600&q=80',
+      fallback: '/images/camera.jpg',
       alt: 'Professional DSLR camera on a desk'
     },
     {
-      src: '/images/laptop.jpg',
+      // Laptop
+      src: 'https://images.unsplash.com/photo-1518779578993-ec3579fee39f?auto=format&fit=crop&w=1600&q=80',
+      fallback: '/images/laptop.jpg',
       alt: 'Sleek laptop open on a workspace'
     },
     {
-      src: '/images/headphones.jpg',
+      // Headphones
+      src: 'https://images.unsplash.com/photo-1518443078884-bc1df95c9fe6?auto=format&fit=crop&w=1600&q=80',
+      fallback: '/images/headphones.jpg',
       alt: 'Over-ear wireless headphones in close-up'
     },
     {
-      src: '/images/smartwatch.jpg',
+      // Smartwatch
+      src: 'https://images.unsplash.com/photo-1517433670267-08bbd4be890f?auto=format&fit=crop&w=1600&q=80',
+      fallback: '/images/smartwatch.jpg',
       alt: 'Smartwatch with health metrics on screen'
     }
   ];
