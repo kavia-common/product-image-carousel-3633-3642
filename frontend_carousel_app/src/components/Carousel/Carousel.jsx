@@ -218,22 +218,10 @@ function Carousel({
                 role="group"
                 aria-roledescription="slide"
                 aria-label={`${idx + 1} of ${count}`}
+                aria-hidden={!isActive}
                 aria-current={isActive ? "true" : undefined}
-                data-testid={`op-slide-${idx}`}
-                style={{
-                  // Keep all slides rendered; do not hide visually.
-                  // We only translate the track, so slides off-screen remain available for measurement.
-                  visibility: "visible",
-                  opacity: 1
-                }}
               >
-                <div
-                  className="op-slide-panel"
-                  role="region"
-                  aria-label={title || `Slide ${idx + 1}`}
-                  data-testid={`op-slide-panel-${idx}`}
-                  data-debug-active={isActive ? "true" : "false"}
-                >
+                <div className="op-slide-panel" role="region" aria-label={title || `Slide ${idx + 1}`}>
                   {subtitle && <p className="op-slide-subtitle">{subtitle}</p>}
                   {title && <h3 className="op-slide-title">{title}</h3>}
                   {description && <p className="op-slide-description">{description}</p>}
@@ -259,7 +247,6 @@ function Carousel({
             className="op-carousel-dots"
             role="tablist"
             aria-label="Choose slide"
-            data-testid="op-carousel-dots"
             style={{ ["--op-safe-bottom"]: "max(env(safe-area-inset-bottom, 0px), 0px)" }}
           >
             {safeSlides.map((_, idx) => {
