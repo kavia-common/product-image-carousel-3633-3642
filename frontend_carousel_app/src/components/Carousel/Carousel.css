@@ -81,6 +81,9 @@
   place-items: center;
   padding: 12px;
   box-sizing: border-box;
+  /* Ensure slides remain rendered; translation of track handles visibility */
+  visibility: visible;
+  opacity: 1;
 }
 
 /* Text slide panel (replaces image rules) */
@@ -95,6 +98,9 @@
   box-shadow: 0 6px 22px rgba(17,24,39,0.10);
   backdrop-filter: blur(4px);
   border: 1px solid rgba(37, 99, 235, 0.10);
+  /* Temporary visual outline to help verify slide visibility */
+  outline: 1px dashed rgba(37, 99, 235, 0.25);
+  outline-offset: 2px;
 }
 
 [data-theme="dark"] .op-slide-panel {
